@@ -6,14 +6,14 @@ class Author:
         Author.all.append(self)       # register this author in the class list
 
     def contracts(self):
-            # all contracts where this author is the one that's in the contract
-             return [contract for contract in Contract.all if contract.author == self]
+        # all contracts where this author is the one that's in the contract
+        return [contract for contract in Contract.all if contract.author == self]
 
     def books(self):
         return [contract.book for contract in self.contracts()]
 
     def sign_contract(self, book, date, royalties):
-    # create and return a new Contract
+        # create and return a new Contract
         return Contract(self, book, date, royalties)
 
     def total_royalties(self):
@@ -30,7 +30,7 @@ class Book:
 
     def contracts(self):
         # all contracts where this book is the one that's under contract
-         return [contract for contract in Contract.all if contract.book == self]
+        return [contract for contract in Contract.all if contract.book == self]
 
     def authors(self):
         # authors tied to this book, based on its contract(s)
@@ -50,7 +50,7 @@ class Contract:
             raise Exception("Invalid date")
         if not isinstance(royalties, int):
             raise Exception("Invalid royalties")
-         
+        
         self.author = author
         self.book = book
         self.date = date
@@ -59,5 +59,4 @@ class Contract:
 
     @classmethod
     def contracts_by_date(cls, date):
-         return [contract for contract in cls.all if contract.date == date]
-    
+        return [contract for contract in cls.all if contract.date == date]
