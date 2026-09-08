@@ -1,116 +1,80 @@
-# Many-to-many Object Relationships Lab
+# Many-to-Many Relationships: Book Contracts Lab
 
-Now that we have learned about several types of relationships it's time to build 
-one of our own. In this lab you will be creating a many-to many relationship in 
-python 
+A Python object model for managing book publishing contracts, demonstrating a
+many-to-many relationship between `Author` and `Book` objects, joined through
+a `Contract` class.
 
-## The Scenario 
+## Overview
 
-We are tasked with building a model to aid in building contracts for books with 
-multiple authors. As a part of this model we need to create an Author model, a Book 
-model and a Contract model. Authors can have many books through contracts, and books 
-can have many authors through contacts.
+An author can write many books, and a book can have many authors; this
+relationship is represented through `Contract` objects, which link a specific
+`Author` and `Book` together along with a signing date and royalty amount.
 
-## Tools & Resources 
-- [Github Repo](https://github.com/learn-co-curriculum/python-oo-many-to-many-book-contracts-lab)
-- [Python classes](https://docs.python.org/3/tutorial/classes.html)
+* **`Author`** — has a name and can sign contracts for books
+* **`Book`** — has a title and can be tied to multiple authors via contracts
+* **`Contract`** — the join between an `Author` and a `Book`, storing the
+  date and royalties for that agreement, with validation to ensure each
+  contract references a real `Author` and `Book`
 
-## Instructions
+## Screenshot
 
-### Task 1: Define the Problem
+<img src="book-contracts-lab.png" alt="Book Contracts Lab passing test suite" width="500">
 
-Build a model a many to many relationship between Books and Authors:
+## Usage
 
-* Build Book class
-* Build Author class
-* Build Contract class
-* Build connecting methods between all
+```python
+from many_to_many import Author, Book, Contract
 
-### Task 2: Determine the Design
+author = Author("Brooke Averick")
+book = Book("Phoebe Berman's Gonna Lose It")
 
-#### Book:
-* Attributes:
-  * title (string)
-  * all (array) 
-* Methods:
-  * contracts()
-  * authors()
+contract = author.sign_contract(book, "03/15/2023", 25000)
 
-#### Authors:
-* Attributes:
-  * name (string)
-  * all (array)
-* Methods:
-  * contracts()
-  * books()
-  * sign_contracts(book,date,royalties)
-  * total_royalties()
+author.books()            # books this author has contracts for
+book.authors()             # authors tied to this book
+author.total_royalties()   # total royalties earned across all contracts
+Contract.contracts_by_date("03/15/2023")  # all contracts signed on a date
+```
 
-#### Contracts:
-* Attributes:
-  * author (Author class), 
-  * book (Book class), 
-  * date (string), 
-  * royalties (integer)
-  * all (array)
-* Methods:
-  * contracts_by_date()
+## Class Reference
 
-### Task 3: Develop, Test, and Refine the Code
+### `Book`
+| Member | Description |
+|---|---|
+| `title` | string, set on init |
+| `Book.all` | class list of every `Book` created |
+| `contracts()` | contracts where this book is under contract |
+| `authors()` | authors tied to this book, via its contracts |
 
-#### Step 1: Create feature branch
+### `Author`
+| Member | Description |
+|---|---|
+| `name` | string, set on init |
+| `Author.all` | class list of every `Author` created |
+| `contracts()` | contracts belonging to this author |
+| `books()` | books tied to this author, via their contracts |
+| `sign_contract(book, date, royalties)` | creates and returns a new `Contract` |
+| `total_royalties()` | sum of royalties across all of this author's contracts |
 
-#### Step 2: Create Book class
+### `Contract`
+| Member | Description |
+|---|---|
+| `author`, `book`, `date`, `royalties` | validated on init (raises an exception if the wrong type is passed) |
+| `Contract.all` | class list of every `Contract` created |
+| `Contract.contracts_by_date(date)` | classmethod returning all contracts matching a given date |
 
-* `__init__`: title
-* Class attributes- all
-* Methods:
-  * contracts()- This method should return a list of related contracts
-  * authors()- This method should return a list of related authors using the Contract class as an intermediary
+## Testing
 
-#### Step 3: Authors
+Run the test suite with:
 
-* `__init__`: name (string)
-* Class attributes- all
-* Methods:
-  * contracts()- This method should return a list of related contracts
-  * books()- This method should return a list of related books using the Contract class as an intermediary
-  * sign_contracts(book,date,royalties)- This method should create and return a new Contract object between the author and the specified book with the specified date and royalties
-  * total_royalties()- This method should return the total amount of royalties that the author has earned from all of their contracts
+```bash
+pipenv install
+pipenv run pytest
+```
 
-#### Step 4: Contracts
+All 14 tests cover initialization, type validation, and the relationship
+methods described above.
 
-* `__init__`:
-  * author
-  * book
-  * date 
-  * royalties 
-* Class attributes: all
-* Properties: All properties should raise an exception if not valid
-  * author: Is an instance of Author class
-  * book:  Is an instance of Book class
-  * date: Is an instance of a str
-  * royalties:  Is an instance of an int
-* Class Methods: contracts_by_date()- This method should return all contracts that have the same date as the date passed into the method
+## Tools & Resources
 
-#### Step 6: Push feature branch and open a PR on GitHub
-
-#### Step 7: Merge to main
-
-### Task 4: Document and Maintain
-
-Best Practice documentation steps:
-* Add comments to the code to explain purpose and logic, clarifying intent and functionality of your code to other developers.
-* Update README text to reflect the functionality of the application following https://makeareadme.com. 
-  * Add screenshot of completed work included in Markdown in README.
-* Delete any stale branches on GitHub
-* Remove unnecessary/commented out code
-* If needed, update git ignore to remove sensitive data
-
-## Important Submission Note
-
-Before you submit your solution, you need to save your progress with git.
-
-* Add your changes to the staging area by executing git add .
-* Create a commit by executing git commit -m "Your commit message"
-* Push your commits to GitHub by executing git push origin main
+* [Python classes documentation](https://docs.python.org/3/tutorial/classes.html)
