@@ -16,6 +16,10 @@ class Author:
     # create and return a new Contract
         return Contract(self, book, date, royalties)
 
+    def total_royalties(self):
+        # sum of the author's royalties across all contracts
+        return sum(contract.royalties for contract in self.contracts())
+
 
 class Book:
     all = []        # tracks every Book instance created
